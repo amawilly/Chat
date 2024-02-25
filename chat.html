@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formular Mesaje</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .message {
+            margin-top: 20px;
+        }
+        .message p {
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <form id="messageForm">
+        <label for="name">Nume:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="phone">Telefon:</label>
+        <input type="text" id="phone" name="phone" required>
+        <label for="message">Mesaj:</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+        <input type="submit" value="Trimite Mesaj">
+    </form>
+
+    <div class="message" id="messageList">
+        <!-- Aici vor fi afișate mesajele salvate -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var messageForm = document.getElementById('messageForm');
+            var messageList = document.getElementById('messageList');
+
+            // Obține mesajele salvate din localStorage și afișează-le la încărcarea paginii
+            var savedMessages = JSON.parse(localStorage.getItem('messages')) || [];
+            savedMessages.forEach(function(savedMessage) {
+                var messageElement = document.createElement('p');
+                messageElement.innerHTML = savedMessage;
+                messageList.appendChild(messageElement);
+            });
+
+            messageForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Previne trimiterea formularului
+
+                // Obține valorile din input-uri
+                var name = document.getElementById('name').value;
+                var phone = document.getElementById('phone').value;
+                var message = document.getElementById('message').value;
+
+                // Creează un element <p> pentru afișarea mesajului și detaliilor
+                var messageElement = document.createElement('p');
+                messageElement.innerHTML = '<strong>Nume:</strong> ' + name + '<br><strong>Telefon:</strong> ' + phone + '<br><strong>Mesaj:</strong> ' + message + '<br><strong>Timp:</strong> ' + new Date().toLocaleString();
+
+                // Adaugă mesajul la lista de mesaje
+                messageList.appendChild(messageElement);
+
+                // Salvează mesajul în localStorage
+                savedMessages.push(messageElement.innerHTML);
+                localStorage.setItem('messages', JSON.stringify(savedMessages));
+
+                // Resetează formularul
+                messageForm.reset();
+            });
+        });
+    </script>
+</body>
+</html>
